@@ -7,6 +7,7 @@ const selectedSort = document.querySelector("#sort-products");
 class ProductView {
   constructor() {
     addNewProductBtn.addEventListener("click", (e) => this.addNewProduct(e));
+    searchInput.addEventListener("input", (e) => this.searchProducts(e));
 
     this.products = [];
   }
@@ -52,6 +53,13 @@ class ProductView {
 
     const productsDOM = document.getElementById("products-list");
     productsDOM.innerHTML = result;
+  }
+  searchProducts(e) {
+    const value = e.target.value.trim().toLowerCase();
+    const filteredProducts = this.products.filter((p) =>
+      p.title.toLowerCase().includes(value)
+    );
+    this.createProductsList(filteredProducts);
   }
 }
 
