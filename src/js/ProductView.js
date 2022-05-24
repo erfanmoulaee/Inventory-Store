@@ -8,7 +8,7 @@ class ProductView {
   constructor() {
     addNewProductBtn.addEventListener("click", (e) => this.addNewProduct(e));
     searchInput.addEventListener("input", (e) => this.searchProducts(e));
-
+    selectedSort.addEventListener("change", (e) => this.sortProducts(e));
     this.products = [];
   }
   setApp() {
@@ -60,6 +60,11 @@ class ProductView {
       p.title.toLowerCase().includes(value)
     );
     this.createProductsList(filteredProducts);
+  }
+  sortProducts(e) {
+    const value = e.target.value;
+    this.products = Storage.getAllProducts(value);
+    this.createProductsList(this.products);
   }
 }
 
