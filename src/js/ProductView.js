@@ -9,6 +9,7 @@ class ProductView {
     addNewProductBtn.addEventListener("click", (e) => this.addNewProduct(e));
     searchInput.addEventListener("input", (e) => this.searchProducts(e));
     selectedSort.addEventListener("change", (e) => this.sortProducts(e));
+    // deleteProduct.addEventListener("click", (e) => this.deleteProduct(e));
     this.products = [];
   }
   setApp() {
@@ -45,14 +46,19 @@ class ProductView {
           class="flex items-center justify-center w-7 h-7 rounded-full bg-slate-500 border-2 border-slate-300 text-slate-300">${
             item.quantity
           }</span>
-        <button class="delete-product border px-2 py-o.5 rounded-2xl border-red-400 text-red-400 delete-product" 
-        data-product-id=${item.id}>حذف کردن</button>
+          <button class="delete-product border px-2 py-o.5 rounded-2xl border-red-400 text-red-400 delete-product" 
+          data-product-id=${item.id}>حذف  </button>
       </div>
     </div>`;
     });
 
     const productsDOM = document.getElementById("products-list");
     productsDOM.innerHTML = result;
+
+    const deleteBtns = [...document.querySelectorAll(".delete-product")];
+    deleteBtns.forEach((item) => {
+      item.addEventListener("click", (e) => this.deleteProduct(e));
+    });
   }
   searchProducts(e) {
     const value = e.target.value.trim().toLowerCase();
@@ -64,6 +70,12 @@ class ProductView {
   sortProducts(e) {
     const value = e.target.value;
     this.products = Storage.getAllProducts(value);
+    this.createProductsList(this.products);
+  }
+  deleteProduct(e) {
+    const produdcId = e.target.dataset.productId;
+    Storage.deleteProduct(produdcId);
+    this.products = Storage.getAllProducts();
     this.createProductsList(this.products);
   }
 }
