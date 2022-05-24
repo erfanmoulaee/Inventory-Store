@@ -34,39 +34,39 @@ const categories = [
   },
 ];
 export default class Storage {
-  //add new category
-  //save new category
-  //getAllCategories
   static getAllCategories() {
     const savedCategories = JSON.parse(localStorage.getItem("category")) || [];
-    // sort => نزولی
     const sortedCategories = savedCategories.sort((a, b) => {
-      return new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
+      return new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1;
     });
     return sortedCategories;
   }
   static saveCategory(categoryToSave) {
-    //edit
-    //new
     const savedCategories = Storage.getAllCategories();
+    // edit => ... save
+    // new => ... save
     const existedItem = savedCategories.find((c) => c.id === categoryToSave.id);
     if (existedItem) {
-      //edit
+      // edit
       existedItem.title = categoryToSave.title;
       existedItem.description = categoryToSave.description;
     } else {
-      //new
+      // new
       categoryToSave.id = new Date().getTime();
       categoryToSave.createdAt = new Date().toISOString();
       savedCategories.push(categoryToSave);
     }
     localStorage.setItem("category", JSON.stringify(savedCategories));
   }
-  static getAllProducts() {
-    const sevedProducts = JSON.parse(localStorage.getItem("product")) || [];
-    //sort
-    return sevedProducts.sort((a, b) => {
-      return new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
+  static getAllProducts(sort = "newest") {
+    const savedProducts = JSON.parse(localStorage.getItem("products")) || [];
+    // newest : default
+    return savedProducts.sort((a, b) => {
+      if (sort === "newest") {
+        return new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1;
+      } else if (sort === "oldest") {
+        return new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
+      }
     });
   }
   static saveProducts(productToSave) {
@@ -86,5 +86,13 @@ export default class Storage {
       savedProducts.push(productToSave);
     }
     localStorage.setItem("products", JSON.stringify(savedProducts));
+  }
+  static deleteProduct(id) {
+    console.log(typeof id);
+    const savedProdocuts = Storage.getAllProducts();
+    const filteredProducts = savedProdocuts.filter(
+      (p) => p.id !== parseInt(id)
+    );
+    localStorage.setItem("products", JSON.stringify(filteredProducts));
   }
 }
